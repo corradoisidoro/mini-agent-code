@@ -84,9 +84,12 @@ def run_agent(messages: list):
         message = response["message"]
         messages.append(message)
 
-        # No tool calls means the model is done and answerd in plain text
+        # No tool calls means the model is done and answered in plain text.
+        # `or ""` guards against a response with content=None and no tool
+        # calls — rare, but seen from some models — so callers never print
+        # the literal string "None".
         if not message.get("tool_calls"):
-            return message.get("content", "")
+            return message.get("content") or ""
 
         for tool_call in message["tool_calls"]:
             result = run_tool(tool_call)

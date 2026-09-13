@@ -224,7 +224,11 @@ def run_tool(tool_call):
     try:
         # Safe argument unpack safeguarding unexpected parameters from LLM model
         result = str(TOOLS[name](**args))
-        logger.info("Tool '%s' executed successfully.", name)
+        # Truncate long results (e.g. read_file on a big file, or verbose shell
+        # output) to keep the log readable — the full result still goes back to
+        # the model via the return value, this is only for what gets logged.
+        preview = result if len(result) < 80 else result[:77] + "..."
+        logger.info("Tool '%s' finished: %s", name, preview)
         return result
     except TypeError as e:
         # The model sent arguments that don't match the tool's signature.
