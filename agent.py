@@ -96,7 +96,7 @@ def run_agent(messages: list):
             messages.append(
                 {
                     "role": "tool",
-                    "name": tool_call.function.name,
+                    "tool_name": tool_call.function.name,
                     "content": result,
                 }
             )

@@ -70,8 +70,43 @@ def test_run_agent_runs_tool_calls_then_returns_final_text(monkeypatch):
     assert result == "finished the task"
     tool_messages = [m for m in messages if m.get("role") == "tool"]
     assert tool_messages == [
-        {"role": "tool", "name": "list_files", "content": "a.txt\nb.txt"}
+        {"role": "tool", "tool_name": "list_files", "content": "a.txt\nb.txt"}
     ]
+
+
+def test_tool_result_survives_ollama_message_validation(monkeypatch):
+    """Guard the tool-result message against Ollama's Message type.
+
+    `Client.chat()` validates every message through `Message` before
+    sending, and `Message` is a Pydantic model — so any key it doesn't
+    define is silently dropped rather than erroring. The key must be
+    `tool_name`, not `name`; a plain `name` disappears here and leaves the
+    result unassociated with the call it answers.
+
+    Asserting on the in-memory `messages` list can't catch that, because
+    the loss happens below our assertion, inside the client.
+    """
+
+    tool_call = make_tool_call("list_files", {"path": "."})
+    with_tool_call = {
+        "message": {"role": "assistant", "content": None, "tool_calls": [tool_call]}
+    }
+    final = {"message": {"role": "assistant", "content": "done"}}
+
+    monkeypatch.setattr(
+        agent.client, "chat", chat_returning(with_tool_call, final)
+    )
+    monkeypatch.setattr(agent, "run_tool", lambda tc: "a.txt\nb.txt")
+
+    messages = [{"role": "user", "content": "list files"}]
+    agent.run_agent(messages)
+
+    tool_message = next(m for m in messages if m.get("role") == "tool")
+
+    # Exactly what ollama.Client.chat() does to each message on the way out.
+    validated = ollama.Message.model_validate(tool_message)
+
+    assert validated.tool_name == "list_files"
 
 
 def test_run_agent_stops_after_max_turns(monkeypatch):
