@@ -1,4 +1,7 @@
-# Building AI Agents in Pure Python
+# mini-agent-code
+
+[![Tests](https://github.com/corradoisidoro/mini-agent-code/actions/workflows/ci.yml/badge.svg)](https://github.com/corradoisidoro/mini-agent-code/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A small coding agent built directly in Python — no agent framework — to
 show exactly what happens between typing a task and a tool call actually
@@ -14,6 +17,9 @@ takes to make that idea safe enough to actually try.
 This is a demo, not a hardened tool: it runs shell commands with your
 permission but no sandboxing, and it's meant to be read, not installed
 and forgotten. Keep that in mind and it's a good one to poke at.
+
+> **Demo:** *(add a ~30s terminal recording or GIF here — one prompt, four
+> tools. Worth more than any screenshot.)*
 
 ---
 
@@ -231,4 +237,4 @@ hidden to work around.
 
 ## License
 
-MIT.
+[MIT](LICENSE) — see the file for details.

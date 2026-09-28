@@ -1,15 +1,42 @@
 [project]
 name = "mini-agent-code"
 version = "0.1.0"
-description = "Add your description here"
+description = "A local coding agent in under 400 lines of Python. Runs entirely on Ollama — no cloud, no API key."
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.14"
+authors = [
+    { name = "Corrado Isidoro", email = "corrado.isidoro@seznam.cz" },
+]
+keywords = [
+    "ai",
+    "agent",
+    "ollama",
+    "llm",
+    "tool-calling",
+    "cli",
+    "local-llm",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 dependencies = [
     "httpx>=0.28.1",
     "ollama>=0.6.2",
     "pydantic>=2.13.5",
     "pydantic-settings>=2.15.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/corradoisidoro/mini-agent-code"
+Repository = "https://github.com/corradoisidoro/mini-agent-code"
+Issues = "https://github.com/corradoisidoro/mini-agent-code/issues"
 
 [dependency-groups]
 dev = [
