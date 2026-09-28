@@ -13,11 +13,15 @@ program immediately, by design — see those functions' docstrings.
 import os
 import subprocess
 import sys
+from collections.abc import Callable, Mapping
+from typing import Any
+
+import ollama
 
 from config import SETTINGS, logger
 
 
-def list_files(path="."):
+def list_files(path: str = ".") -> str:
     """Return a newline-separated listing of a directory's contents.
 
     Directories are suffixed with '/'. Defaults to the current directory.
@@ -35,7 +39,7 @@ def list_files(path="."):
         return f"Error listing files: {e}"
 
 
-def read_file(path):
+def read_file(path: str) -> str:
     """Read and return the full text contents of a file.
 
     Returns an error message string if the file doesn't exist, isn't
@@ -51,7 +55,7 @@ def read_file(path):
         return f"Error reading file: {e}"
 
 
-def write_file(path, content):
+def write_file(path: str, content: str) -> str:
     """Write text content to a file, after asking the user to confirm.
 
     Warns explicitly if this would overwrite an existing file. Returns a
@@ -80,7 +84,7 @@ def write_file(path, content):
         return f"Error writing file: {e}"
 
 
-def run_command(command):
+def run_command(command: str) -> str:
     """Run a shell command after asking the user to confirm.
 
     Captures stdout/stderr and returns them combined if the command runs.
@@ -117,7 +121,7 @@ def run_command(command):
 # implements it. Keep this, TOOL_SCHEMAS, and run_tool in sync when adding
 # a new tool: the schema tells the model the tool exists, this dict lets
 # run_tool actually call it.
-TOOLS = {
+TOOLS: dict[str, Callable[..., str]] = {
     "list_files": list_files,
     "read_file": read_file,
     "write_file": write_file,
@@ -125,7 +129,9 @@ TOOLS = {
 }
 
 # JSON schemas describing each tool to the model, in the format Ollama's function-calling API expects.
-TOOL_SCHEMAS = [
+# Mappings, not `ollama.Tool` — that's a Pydantic model, and these stay
+# plain dicts until the client validates them on the way out.
+TOOL_SCHEMAS: list[Mapping[str, Any]] = [
     {
         "type": "function",
         "function": {
@@ -201,7 +207,7 @@ TOOL_SCHEMAS = [
 ]
 
 
-def run_tool(tool_call):
+def run_tool(tool_call: ollama.Message.ToolCall) -> str:
     """Execute the tool an LLM tool_call requested, and return its result as a string.
 
     `tool_call` is the object Ollama returns for a single requested call:

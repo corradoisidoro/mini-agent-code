@@ -1,6 +1,6 @@
 # mini-agent-code
 
-[![Tests](https://github.com/corradoisidoro/mini-agent-code/actions/workflows/ci.yml/badge.svg)](https://github.com/corradoisidoro/mini-agent-code/actions/workflows/ci.yml)
+[![CI](https://github.com/corradoisidoro/mini-agent-code/actions/workflows/ci.yml/badge.svg)](https://github.com/corradoisidoro/mini-agent-code/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A small coding agent built directly in Python — no agent framework — to
@@ -187,8 +187,21 @@ pip install -e . --group dev && pytest           # otherwise
 
 The tests cover the success/fail outcome logic of the tools and the
 agent loop (`test_tools.py`, `test_agent.py`) with the real network call
-and real tool execution mocked out — no live Ollama server or shell
+and real tool execution mocked out - no live Ollama server or shell
 commands run as part of the test suite.
+
+## Types
+
+The four source modules are annotated and checked under `mypy --strict`,
+with the Pydantic plugin enabled so `Settings` validates correctly:
+
+```bash
+uv run mypy
+```
+
+Both `pytest` and `mypy` run in CI on every push. Where the type checker
+can't help - the LLM supplies tool arguments as `Any`, and `ollama.Message`
+has a permissive `__getitem__` - the tests carry the load instead.
 
 ## Project structure
 

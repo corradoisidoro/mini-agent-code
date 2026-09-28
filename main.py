@@ -8,7 +8,7 @@ Runs a simple read-eval-print loop: reads a line from the user, hands it
 from agent import SYSTEM_PROMPT, run_agent
 
 
-def main():
+def main() -> None:
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     print("Mini agent ready. Type 'exit' to quit.")
     while True:

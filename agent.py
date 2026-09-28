@@ -9,6 +9,7 @@ used up (safety valve against a looping model).
 
 import sys
 import time
+from typing import Any
 
 import httpx
 import ollama
@@ -29,7 +30,7 @@ Use your tools to complete the user's task, then briefly summarize what you did.
 The working directory is the folder the user launched you from."""
 
 
-def run_agent(messages: list):
+def run_agent(messages: list[dict[str, Any]]) -> str:
     """Run the LLM <-> tool-call loop for one user turn.
 
     `messages` is the full conversation history (including the new user

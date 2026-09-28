@@ -40,5 +40,18 @@ Issues = "https://github.com/corradoisidoro/mini-agent-code/issues"
 
 [dependency-groups]
 dev = [
+    "mypy>=2.3.1",
     "pytest>=8.0",
 ]
+
+[tool.mypy]
+files = ["main.py", "agent.py", "tools.py", "config.py"]
+strict = true
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+# `ollama.Message` is a Pydantic model with a permissive `__getitem__`
+# returning `Any`, so the chat-response dict-style accessors below are
+# genuinely untyped in the library. Nothing we can do about it at our end.
+module = ["ollama.*"]
+follow_imports = "normal"
