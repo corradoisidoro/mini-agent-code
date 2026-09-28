@@ -18,9 +18,6 @@ This is a demo, not a hardened tool: it runs shell commands with your
 permission but no sandboxing, and it's meant to be read, not installed
 and forgotten. Keep that in mind and it's a good one to poke at.
 
-> **Demo:** *(add a ~30s terminal recording or GIF here — one prompt, four
-> tools. Worth more than any screenshot.)*
-
 ---
 
 ## What an agent actually is
